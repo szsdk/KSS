@@ -1,3 +1,4 @@
+import numpy as np
 import logging
 FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 #logging.basicConfig(format=FORMAT,level=logging.DEBUG)
@@ -39,13 +40,3 @@ class Parameter(object):
                 else:
                     return False
         return ans
-
-class p(Parameter):
-    def __init__(self, **args):
-        Parameter.__init__(self, **args)
-
-a=p(h=12)
-b=p(h=1, c=23)
-b.set_ignore({'h'})
-print(b.__dict__.keys())
-print(a.__eq__(b,True))
