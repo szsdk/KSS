@@ -7,10 +7,16 @@ import numpy as np
 from subprocess import check_output
 import tempfile
 
-check_output("gcc -std=c99 -c times.c", shell=True)
-check_output("gcc -shared times.o -o times.dll", shell=True)
+import platform
+if platform.system()=="Linux":
+    check_output("gcc -std=c99 -fPIC -c times.c", shell=True)
+    check_output("gcc -shared times.o -o times.so", shell=True)
+    times = cdll.LoadLibrary(os.getcwd()+"/times.so")
+else:
+    check_output("gcc -std=c99 -c times.c", shell=True)
+    check_output("gcc -shared times.o -o times.dll", shell=True)
+    times = cdll.LoadLibrary(os.getcwd()+"/times.dll")
 
-times = cdll.LoadLibrary(os.getcwd()+"/times.dll")
 print(times.multiply(3,3))
 
 trace=times.trace
