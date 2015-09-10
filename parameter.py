@@ -40,3 +40,20 @@ class Parameter(object):
                 else:
                     return False
         return ans
+
+import pickle
+def save_data(filename, para, data):
+    with open(filename, 'wb') as f:
+        pickle.dump(para, f)
+        pickle.dump(data, f)
+
+def get_parameter(filename):
+    with open(filename, 'rb') as f:
+        para = pickle.load(f)
+    return para
+
+def read_data(filename):
+    with open(filename, 'rb') as f:
+        para = pickle.load(f)
+        data = pickle.load(f)
+    return para, data
