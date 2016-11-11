@@ -57,3 +57,36 @@ def read_data(filename):
         para = pickle.load(f)
         data = pickle.load(f)
     return para, data
+
+class SaveData(object):
+    '''
+    This is the class the decorate a function for checking if
+    the result file of this function exist, if not, computing
+    and save it.
+    '''
+    folder = './'
+    def __init__(self, func):
+        self.func = func
+        self.filename = ''
+        self.folder = ''
+        self.force_refresh = False
+
+    def __call__(self, *args, **kwds):
+        if self.folder:
+            filename = self.folder+self.filename
+        else:
+            filename = SaveData.folder+self.filename
+        if not self.force_refresh:
+            try:
+                logging.debug('try reading %s', filename)
+                _ = pickle.load(open(filename, 'rb'))
+            except FileNotFoundError:
+                pass
+            else:
+                logging.info('The file %s is existing.', filename)
+                return _
+        logging.info('Computing %s', filename)
+        #logging.info('Computing %s with %s', filename, self.func.__name__)
+        _ = self.func(*args, **kwds)
+        pickle.dump(_, open(filename, 'wb'))
+        return _
